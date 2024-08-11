@@ -5,7 +5,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-const flashCardsRouter = require("./routes/flashCard");
+const flashCardsRouter = require("../routes/flashCard");
 
 const port = process.env.PORT ? process.env.PORT : 8000;
 app.get("/:id", (req, res) => {
