@@ -1,5 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Dashboard = () => {
   const [showList, setShowList] = useState(false);
@@ -25,7 +27,6 @@ const Dashboard = () => {
       throw new Error("Question answer Answer cannot be empty");
     }
     try {
-      console.log(import.meta.env.VITE_API_URL + "/flashcards");
       const res = await axios.post(
         import.meta.env.VITE_API_URL + "/flashcards",
         {
@@ -38,7 +39,8 @@ const Dashboard = () => {
           },
         }
       );
-      console.log(res);
+
+      toast.success(res.data.message);
       //Upadating the cardslist
       setCardsData([...cardsData, res.data]);
 
@@ -46,7 +48,7 @@ const Dashboard = () => {
       setQuestion("");
       setAnswer("");
     } catch (error) {
-      console.log(error);
+      toast.error(error);
     }
   };
   return (
@@ -61,6 +63,7 @@ const Dashboard = () => {
             id="question"
             className="w-full  outline-none border rounded-md p-2 "
             placeholder="Enter your question here"
+            value={question}
             onChange={(e) => setQuestion(e.target.value)}
           />
           <h1 className="text-xl">Enter the Answer</h1>
@@ -70,6 +73,7 @@ const Dashboard = () => {
             id="answer"
             className="w-full outline-none border rounded-md p-2 "
             placeholder="Enter the answer here"
+            value={answer}
             onChange={(e) => setAnswer(e.target.value)}
           />
           <button
@@ -132,6 +136,7 @@ const Dashboard = () => {
           )}
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

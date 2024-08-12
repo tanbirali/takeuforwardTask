@@ -1,6 +1,8 @@
 import axios from "axios";
 import React from "react";
 import { RxCross2 } from "react-icons/rx";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const DeleteConfirmationModal = ({
   id,
@@ -13,11 +15,12 @@ const DeleteConfirmationModal = ({
       const res = await axios.delete(
         import.meta.env.VITE_API_URL + "/flashcards" + `/${id}`
       );
-      console.log(res.data);
+      toast.success(res.data.message);
       setShowDeleteModal(false);
       fetchData();
     } catch (error) {
-      console.log(error);
+      // console.log(error);
+      toast.error(error);
     }
   };
   return showDeleteModal ? (
@@ -51,6 +54,7 @@ const DeleteConfirmationModal = ({
           </div>
         </div>
       </div>
+      <ToastContainer />
     </div>
   ) : null;
 };

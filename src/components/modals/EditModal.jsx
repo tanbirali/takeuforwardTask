@@ -1,6 +1,8 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { RxCross2 } from "react-icons/rx";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const EditModal = ({
   showEditModal,
@@ -31,13 +33,15 @@ const EditModal = ({
           },
         }
       );
-      console.log(res.data);
+      // console.log(res.data);
+      toast.success(res.data.message);
       fetchData();
       setEditQuestion("");
       setEditAnswer("");
       setShowEditModal(false);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
+      toast.error(error);
     }
   };
 
@@ -81,6 +85,7 @@ const EditModal = ({
           </button>
         </div>
       </div>
+      <ToastContainer />
     </div>
   ) : null;
 };
