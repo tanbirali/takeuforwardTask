@@ -29,10 +29,22 @@ const updateCard = (req, res) => {
 
 const deleteCard = (req, res) => {
   const { id } = req.params;
-  const sql = "DELETE FROM flashcards WHERE id = ?";
-  db.query(sql, [id], (err, result) => {
+  const checkSql = "SELECT * FROM flashcards WHERE id = ?";
+
+  db.query(checkSql, [id], (err, result) => {
     if (err) throw err;
-    res.json({ message: "Flashcard deleted" });
+
+    if (result.length === 0) {
+      // If no flashcard with the given id exists
+      return res.status(404).json({ message: "Flashcard not found" });
+    }
+
+    // If flashcard exists, proceed to delete
+    const deleteSql = "DELETE FROM flashcards WHERE id = ?";
+    db.query(deleteSql, [id], (err, result) => {
+      if (err) throw err;
+      res.json({ message: "Flashcard deleted" });
+    });
   });
 };
 
