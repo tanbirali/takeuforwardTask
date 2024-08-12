@@ -10,8 +10,8 @@ const EditModal = ({
   answer,
   fetchData,
 }) => {
-  const [editQuestion, setEditQuestion] = useState("");
-  const [editAnswer, setEditAnswer] = useState("");
+  const [editQuestion, setEditQuestion] = useState(question);
+  const [editAnswer, setEditAnswer] = useState(answer);
 
   const handleUpdate = async (id) => {
     console.log(id);
