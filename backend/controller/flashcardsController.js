@@ -2,15 +2,11 @@ const { db } = require("../db/connection");
 
 const addCard = (req, res) => {
   const { question, answer } = req.body;
+  const userId = req.user.id;
 
-  if (!question || !answer) {
-    return res
-      .status(400)
-      .json({ message: "Question and answer are required" });
-  }
-
-  const sql = "INSERT INTO flashcards (question, answer) VALUES (?, ?)";
-  db.query(sql, [question, answer], (err, result) => {
+  const sql =
+    "INSERT INTO flashcards (question, answer, user_id) VALUES (?, ?, ?)";
+  db.query(sql, [question, answer, userId], (err, result) => {
     if (err) {
       console.error("Error inserting flashcard:", err);
       return res.status(500).json({ message: "Error adding flashcard" });
@@ -25,8 +21,9 @@ const addCard = (req, res) => {
 };
 
 const fetchCards = (req, res) => {
-  const sql = "SELECT * FROM flashcards";
-  db.query(sql, (err, results) => {
+  const userId = req.user.id;
+  const sql = "SELECT * FROM flashcards where user_id = ?";
+  db.query(sql, [userId], (err, results) => {
     if (err) {
       console.error("Error fetching flashcards:", err);
       return res.status(500).json({ message: "Error fetching flashcards" });
@@ -38,6 +35,7 @@ const fetchCards = (req, res) => {
 const updateCard = (req, res) => {
   const { id } = req.params;
   const { question, answer } = req.body;
+  const userId = req.user.id;
 
   if (!question || !answer) {
     return res
@@ -45,8 +43,9 @@ const updateCard = (req, res) => {
       .json({ message: "Question and answer are required" });
   }
 
-  const sql = "UPDATE flashcards SET question = ?, answer = ? WHERE id = ?";
-  db.query(sql, [question, answer, id], (err, result) => {
+  const sql =
+    "UPDATE flashcards SET question = ?, answer = ? WHERE id = ? AND user_id = ?";
+  db.query(sql, [question, answer, id, userId], (err, result) => {
     if (err) {
       console.error("Error updating flashcard:", err);
       return res.status(500).json({ message: "Error updating flashcard" });
@@ -62,9 +61,10 @@ const updateCard = (req, res) => {
 
 const deleteCard = (req, res) => {
   const { id } = req.params;
+  const userId = req.user.id;
   const checkSql = "SELECT * FROM flashcards WHERE id = ?";
 
-  db.query(checkSql, [id], (err, result) => {
+  db.query(checkSql, [id, userId], (err, result) => {
     if (err) {
       console.error("Error checking flashcard existence:", err);
       return res.status(500).json({ message: "Error checking flashcard" });

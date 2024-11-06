@@ -5,7 +5,10 @@ const {
   updateCard,
   deleteCard,
 } = require("../controller/flashcardsController");
+const authenticateToken = require("../util/authenticateToken");
 const router = express.Router();
+
+router.use(authenticateToken);
 
 router.get("/flashcards", fetchCards);
 
