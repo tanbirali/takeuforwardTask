@@ -1,18 +1,23 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Flashcards from "./components/Flashcards";
 import Dashboard from "./components/Dashboard";
 import Navbar from "./components/Navbar";
+import Login from "./components/Login";
+import SignUp from "./components/SignUp";
+import { useAuth } from "./store/authContext";
 
 function App() {
-  const [count, setCount] = useState(0);
-
+  const { user } = useAuth();
+  console.log(user);
   return (
     <>
       <BrowserRouter>
-        <Navbar />
+        {user && <Navbar />}
         <Routes>
-          <Route path="/" element={<Flashcards />} />
+          <Route path="/" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/flashcards" element={<Flashcards />} />
           <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </BrowserRouter>
@@ -21,3 +26,19 @@ function App() {
 }
 
 export default App;
+
+const AppContent = () => {
+  const { user } = useAuth();
+
+  return (
+    <>
+      {user !== null && <Navbar />}
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/flashcards" element={<Flashcards />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Routes>
+    </>
+  );
+};

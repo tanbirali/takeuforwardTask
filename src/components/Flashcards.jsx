@@ -5,6 +5,8 @@ import { FcNext, FcPrevious } from "react-icons/fc";
 import { FiDelete } from "react-icons/fi";
 import DeleteConfirmationModal from "./modals/DeleteConfirmationModal";
 import EditModal from "./modals/EditModal";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Flashcards = () => {
   const [current, setCurrent] = useState(0);
@@ -16,6 +18,11 @@ const Flashcards = () => {
     question: "",
     answer: "",
   });
+  if (!localStorage.getItem("token")) {
+    toast.error("You need to login first");
+  } else {
+    const token = localStorage.getItem("token");
+  }
   const handleEditClick = (id, question, answer) => {
     setSelectedCard({ id, question, answer });
     setShowEditModal(true);
@@ -36,7 +43,14 @@ const Flashcards = () => {
   const [cardsData, setCardsData] = useState([]);
   const fetchData = async () => {
     try {
-      const res = await axios.get(import.meta.env.VITE_API_URL + "/flashcards");
+      const res = await axios.get(
+        import.meta.env.VITE_API_URL + "/flashcards",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       console.log(res.data);
       setCardsData(res.data);
     } catch (error) {
@@ -92,6 +106,7 @@ const Flashcards = () => {
         answer={selectedCard.answer}
         fetchData={fetchData}
       />
+      <ToastContainer />
     </div>
   );
 };

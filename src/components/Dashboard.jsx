@@ -2,10 +2,13 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useAuth } from "../store/authContext";
+import Loader from "./Loader";
 
 const Dashboard = () => {
   const [showList, setShowList] = useState(false);
   const [cardsData, setCardsData] = useState([]);
+  const { user, token, loading } = useAuth();
   useEffect(() => {
     const fetchData = async () => {
       // console.log(import.meta.env.VITE_API_URL);
@@ -36,6 +39,7 @@ const Dashboard = () => {
         {
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -51,9 +55,14 @@ const Dashboard = () => {
       toast.error(error);
     }
   };
+  console.log(user);
+  if (loading) {
+    return <Loader />;
+  }
   return (
     <div className=" flex justify-center items-center p-4">
       <div className=" w-full flex flex-col justify-center gap-6">
+        {user && <p>Welcome, {user.username}</p>}
         <h1 className="text-3xl font-bold ">Dashboard</h1>
         <div className="flex flex-col justify-center gap-3 ">
           <h1 className="text-xl">Enter the Question</h1>

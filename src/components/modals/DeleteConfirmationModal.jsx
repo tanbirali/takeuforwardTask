@@ -54,7 +54,7 @@ const DeleteConfirmationModal = ({
           </div>
         </div>
       </div>
-      <ToastContainer />
+      {/* <ToastContainer /> */}
     </div>
   ) : null;
 };
